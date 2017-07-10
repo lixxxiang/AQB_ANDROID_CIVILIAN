@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.cgwx.yyfwptz.lixiang.aqb.VCodeActivity">
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="10dp"
+        android:layout_height="17dp"
+        android:background="@drawable/back"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="19dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="20dp" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="输入验证码"
+        android:textSize="14dp"
+        android:textColor="#5f5f5f"
+        android:layout_alignBottom="@+id/back"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="验证码已发送到"
+        android:textColor="#b5b5b5"
+        android:textSize="12dp"
+        android:layout_below="@+id/textView11"
+        android:layout_alignRight="@+id/textView11"
+        android:layout_alignEnd="@+id/textView11"
+        android:layout_marginRight="32dp"
+        android:layout_marginEnd="32dp" />
+
+    <TextView
+        android:id="@+id/tel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="39dp"
+        android:layout_marginStart="39dp"
+        android:text="TextView"
+        android:textColor="#b5b5b5"
+        android:textSize="12dp"
+        android:layout_alignBaseline="@+id/textView12"
+        android:layout_alignBottom="@+id/textView12"
+        android:layout_alignLeft="@+id/textView11"
+        android:layout_alignStart="@+id/textView11" />
+
+    <EditText
+        android:id="@+id/vcodeedit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="78dp"
+        android:ems="11"
+        android:textSize="14dp"
+        android:textColor="#b5b5b5"
+        android:hint="请输入验证码"
+        android:background="@null"
+        android:textCursorDrawable="@null"
+        android:layout_below="@+id/textView12"
+        android:layout_toRightOf="@+id/back"
+        android:layout_toEndOf="@+id/back" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/line"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/vcodeedit"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView6"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:textSize="14dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/gray"
+        android:text="登录" />
+
+    <TextView
+        android:id="@+id/countback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login"
+        android:textSize="14dp"
+        android:textColor="#b5b5b5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+         />
+</RelativeLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom|center"
+    android:id="@+id/cpview"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="382dp"
+        android:background="#FFFFFF"
+        android:layout_height="145dp"
+        android:id="@+id/relativeLayout">
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/cpimage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        app:srcCompat="@drawable/cpimage" />
+
+    <TextView
+        android:id="@+id/cp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cpimage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="17dp"
+        android:textColor="#ff9801"
+        android:text="我要报警" />
+
+</RelativeLayout>

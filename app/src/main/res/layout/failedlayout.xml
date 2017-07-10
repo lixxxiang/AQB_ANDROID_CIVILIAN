@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom|center"
+    android:id="@+id/failed"
+    android:visibility="invisible"
+
+    >
+
+    <RelativeLayout
+        android:layout_width="382dp"
+        android:background="#FFFFFF"
+        android:layout_height="145dp"
+        android:id="@+id/relativeLayout">
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="请立即呼叫 110" />
+
+    <Button
+        android:id="@+id/call110"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView5"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp"
+        android:background="@drawable/call110"
+        android:textColor="#ffffff"
+        android:text="呼叫 110" />
+
+</RelativeLayout>

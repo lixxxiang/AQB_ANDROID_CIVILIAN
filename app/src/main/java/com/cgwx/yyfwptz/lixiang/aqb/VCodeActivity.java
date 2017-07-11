@@ -112,6 +112,8 @@ public class VCodeActivity extends AppCompatActivity {
 
         if (intent != null){
             userTel = intent.getStringExtra("userTel");
+//            SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+//            userTel = sp.getString("userTel",null);
             Log.e("to",userTel);
             tel.setText(userTel);
         }

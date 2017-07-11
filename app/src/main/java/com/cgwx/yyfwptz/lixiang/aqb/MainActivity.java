@@ -2,6 +2,7 @@ package com.cgwx.yyfwptz.lixiang.aqb;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -136,7 +137,11 @@ public class MainActivity extends AppCompatActivity {
         if (intent != null) {
             userTel = intent.getStringExtra("userTel");
             userId = intent.getStringExtra("userId");
-            Log.e("to",userId);
+            SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
+            userTel = sp.getString("userTel", null);
+            userId = sp.getString("userId", null);
+            Log.e("tel", userTel);
+            Log.e("id",userId);
         }
 
         initToolbar(R.id.toolbar, R.id.toolbar_title, "安全宝");

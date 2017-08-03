@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.cgwx.yyfwptz.lixiang.entity.Constants;
 import com.cgwx.yyfwptz.lixiang.entity.sendMessage;
 import com.google.gson.Gson;
 
@@ -34,16 +35,17 @@ public class LoginActivity extends AppCompatActivity {
     Button getVcode;
     EditText tel;
     String userTel;
-    public static final String POST_URL = "http://10.10.90.11:8086/mobile/common/sendMessage";
+    public static final String POST_URL =  Constants.prefix + "mobile/common/sendMessage";
     private OkHttpClient client;
     Gson gson;
+    public static LoginActivity la;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        la = this;
         SharedPreferences sp = getSharedPreferences("User", MODE_PRIVATE);
 
         if(sp.getString("userTel", null) != null){

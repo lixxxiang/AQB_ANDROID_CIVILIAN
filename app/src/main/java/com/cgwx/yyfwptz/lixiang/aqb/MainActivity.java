@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -45,6 +46,8 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.model.LatLng;
+import com.cgwx.yyfwptz.lixiang.entity.Constants;
+import com.cgwx.yyfwptz.lixiang.entity.WrongMessage;
 import com.cgwx.yyfwptz.lixiang.entity.addAlarm;
 import com.cgwx.yyfwptz.lixiang.entity.sendMessage;
 import com.google.gson.Gson;
@@ -81,8 +84,8 @@ public class MainActivity extends AppCompatActivity {
     BaiduMap mBaiduMap;
     Button mine;
     Toolbar toolbar;
-    public static final String POST_URL_ALARM = "http://10.10.90.11:8086/mobile/civilian/addAlarm/";
-    public static final String POST_URL_ROLL = "http://10.10.90.11:8086/mobile/civilian/isAlarmAccepted/";
+    public static final String POST_URL_ALARM = Constants.prefix +  "mobile/civilian/addAlarm/";
+    public static final String POST_URL_ROLL = Constants.prefix +  "mobile/civilian/isAlarmAccepted/";
 
     private OkHttpClient alarm;
     private OkHttpClient roll;
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     View completeview;
     View callpoliceview;
     View failureview;
-
+    long exitTime =0;
     Boolean isSucceed;
 
     private Timer timer;
@@ -143,6 +146,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e("tel", userTel);
             Log.e("id",userId);
         }
+//            /**
+//             * for test
+//             */
+//        userTel = "13123456789";
+//        userId = "000001";
+//        Log.e("tel", userTel);
+//        Log.e("id",userId);
 
         initToolbar(R.id.toolbar, R.id.toolbar_title, "安全宝");
 
@@ -173,15 +183,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 count = 0;
                 timer = new Timer();
-                task = new TimerTask() {
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        Message message = new Message();
-                        message.what = 1;
-                        handler.sendMessage(message);
-                    }
-                };
                 alarm = new OkHttpClient.Builder()
                         .connectTimeout(10, TimeUnit.SECONDS)
                         .readTimeout(10, TimeUnit.SECONDS)
@@ -189,8 +190,8 @@ public class MainActivity extends AppCompatActivity {
                 RequestBody requestBodyPost = new FormBody.Builder()
                         .add("civilianId", userId)
                         .add("civilianTel", userTel)
-                        .add("longitude", "" + myListener.lati)
-                        .add("latitude", "" + myListener.longi)
+                        .add("longitude", "" + myListener.longi)
+                        .add("latitude", "" + myListener.lati)
                         .add("poi", myListener.poi.get(0).getName())
                         .add("address", myListener.address)
                         .build();
@@ -211,20 +212,34 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
 
                                 Log.e("return:", string);
+                                WrongMessage wm = gsonAlarm.fromJson(string, WrongMessage.class);
                                 addAlarm aA = gsonAlarm.fromJson(string, addAlarm.class);
-                                if (aA.getMeta().equals("success")) {
-                                    Log.e("state:", "报警成功");
-                                    alarmID = aA.getAlarmId();
-                                    callpoliceview.setVisibility(View.INVISIBLE);
-                                    arrangeview.setVisibility(View.VISIBLE);
-                                    iconinfo.setText("正在安排警力");
+                                if(wm.getStatus() != null){
+                                    if(wm.getStatus().equals("500")){
+                                        Toast.makeText(MainActivity.this, "服务器连接失败，请稍后重试", Toast.LENGTH_LONG).show();
+                                    }
+                                }else{
+                                    if (aA.getMeta().equals("success")) {
+                                        Log.e("state:", "报警成功");
+                                        alarmID = aA.getAlarmId();
+                                        callpoliceview.setVisibility(View.INVISIBLE);
+                                        arrangeview.setVisibility(View.VISIBLE);
+                                        iconinfo.setText("正在安排警力");
 
-                                    /**
-                                     * 轮询
-                                     */
+                                        /**
+                                         * 轮询
+                                         */
 
-                                    timer.schedule(task, 1000, 1000);
-
+                                        timer.schedule(new TimerTask() {
+                                            @Override
+                                            public void run() {
+                                                // TODO Auto-generated method stub
+                                                Message message = new Message();
+                                                message.what = 1;
+                                                handler.sendMessage(message);
+                                            }
+                                        }, 1000, 1000);
+                                    }
                                 }
                             }
                         });
@@ -260,6 +275,7 @@ public class MainActivity extends AppCompatActivity {
         mUiSettings = mBaiduMap.getUiSettings();
         mUiSettings.setScrollGesturesEnabled(false);
         mUiSettings.setOverlookingGesturesEnabled(false);
+        mUiSettings.setZoomGesturesEnabled(false);
         mLocClient = new LocationClient(this);
         mLocClient.registerLocationListener(myListener);
         LocationClientOption option = new LocationClientOption();
@@ -281,10 +297,13 @@ public class MainActivity extends AppCompatActivity {
 
             roll();
             count++;
-            if (count > 9) {
-                timer.cancel();
-                timer.purge();
-                timer = null;
+            if (count > 300) {
+                if(timer != null){
+                    timer.purge();
+                    timer.cancel();
+                }
+                timer = new Timer();
+
                 callpoliceview.setVisibility(View.INVISIBLE);
                 arrangeview.setVisibility(View.INVISIBLE);
                 failureview.setVisibility(View.VISIBLE);
@@ -301,8 +320,8 @@ public class MainActivity extends AppCompatActivity {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(10, TimeUnit.SECONDS)
                 .build();
-        userId = "1";
-        userTel = "13222223333";
+//        userId = "1";
+//        userTel = "13222223333";
         RequestBody requestBodyPost = new FormBody.Builder()
                 .add("alarmId", alarmID)
                 .build();
@@ -329,9 +348,11 @@ public class MainActivity extends AppCompatActivity {
                             arrangeview.setVisibility(View.INVISIBLE);
                             completeview.setVisibility(View.VISIBLE);
                             iconinfo.setText("报警成功");
-                            timer.cancel();
-                            timer.purge();
-                            timer = null;
+                            if(timer != null){
+                                timer.purge();
+                                timer.cancel();
+                            }
+                            timer = new Timer();
                             done.setVisibility(View.VISIBLE);
                             isSucceed = true;
                         } else if (aA.getMeta().equals("failure")) {
@@ -358,6 +379,18 @@ public class MainActivity extends AppCompatActivity {
 //                            faview.setVisibility(View.VISIBLE);
 //                            done.setVisibility(View.VISIBLE);
 
+                        } else if (aA.getMeta().equals("no police")){
+                            if(timer != null){
+                                timer.purge();
+                                timer.cancel();
+                            }
+                            timer = new Timer();
+                            callpoliceview.setVisibility(View.INVISIBLE);
+                            arrangeview.setVisibility(View.INVISIBLE);
+                            failureview.setVisibility(View.VISIBLE);
+                            iconinfo.setText("报警失败");
+                            done.setVisibility(View.VISIBLE);
+                            isSucceed = false;
                         }
                     }
                 });
@@ -479,5 +512,42 @@ public class MainActivity extends AppCompatActivity {
         done.setOnClickListener(btnClick);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN)
+        {
+
+            if((System.currentTimeMillis()-exitTime) > 2000)  //System.currentTimeMillis()无论何时调用，肯定大于2000
+            {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序，您的案情将报警失败。",Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            }
+            else
+            {
+                if(timer != null){
+                    timer.purge();
+                    timer.cancel();
+                }
+
+                isSucceed = false;
+                finish();
+
+                if (LoginActivity.la != null){
+                    LoginActivity.la.finish();
+                }
+                if (VCodeActivity.va != null){
+                    VCodeActivity.va.finish();
+                }
+                if(MineActivity.ma != null){
+                    MineActivity.ma.finish();
+                }
+                System.exit(0);
+            }
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
 }
